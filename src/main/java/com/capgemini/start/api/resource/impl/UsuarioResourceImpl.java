@@ -15,47 +15,46 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.capgemini.start.api.dto.input.TipoInputDTO;
-import com.capgemini.start.api.dto.output.TipoDTO;
-import com.capgemini.start.api.mapper.TipoMapper;
-import com.capgemini.start.api.resource.TipoResource;
-import com.capgemini.start.domain.entity.Tipo;
-import com.capgemini.start.domain.service.TipoService;
+import com.capgemini.start.api.dto.input.UsuarioInputDTO;
+import com.capgemini.start.api.dto.output.UsuarioDTO;
+import com.capgemini.start.api.mapper.UsuarioMapper;
+import com.capgemini.start.api.resource.UsuarioResource;
+import com.capgemini.start.domain.entity.Usuario;
+import com.capgemini.start.domain.service.UsuarioService;
 
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "/api/tipos")
-public class TipoResourceImpl implements TipoResource{
+@RequestMapping(value = "/api/usuarios")
+public class UsuarioResourceImpl implements UsuarioResource{
 	
-	private final TipoService service;
+	private final UsuarioService service;
 	
 	@Autowired
-	private TipoMapper mapper;
+	private UsuarioMapper mapper;
 	
 	@Override
-	public ResponseEntity<TipoDTO> findById(Long id) {
-		Tipo tipo = this.service.findById(id);
-	
-		TipoDTO dto = mapper.toDTO(tipo);
+	public ResponseEntity<UsuarioDTO> findById(Long id) {
+		Usuario usuario = this.service.findById(id);
+		UsuarioDTO dto = mapper.toDTO(usuario);
 		return ResponseEntity.ok(dto);
 	}
 
 	@Override
-	public ResponseEntity<List<TipoDTO>> findAll() {
+	public ResponseEntity<List<UsuarioDTO>> findAll() {
 		return ResponseEntity.ok(
 					this.service.findAll()
 					.stream()
-					.map(tipo -> mapper.toDTO(tipo))
+					.map(usuario -> mapper.toDTO(usuario))
 					.collect(Collectors.toList())
 				);
 	}
 
 	@Override
-	public ResponseEntity<TipoDTO> insert(@RequestBody @Valid TipoInputDTO tipo) {
-		Tipo entity = mapper.toEntity(tipo);
-		Tipo createdEntity = this.service.insert(entity);
+	public ResponseEntity<UsuarioDTO> insert(@RequestBody @Valid UsuarioInputDTO usuario) {
+		Usuario entity = mapper.toEntity(usuario);
+		Usuario createdEntity = this.service.insert(entity);
 		
 		URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -68,11 +67,12 @@ public class TipoResourceImpl implements TipoResource{
 	}
 
 	@Override
-	public ResponseEntity<TipoDTO> update(Long id, @Valid TipoInputDTO tipo) {
-		Tipo toUpdate = this.service.findById(id);
-		toUpdate.setDescricao(tipo.getDescricao());
+	public ResponseEntity<UsuarioDTO> update(Long id, @Valid UsuarioInputDTO usuario) {
+		Usuario toUpdate = this.service.findById(id);
+		toUpdate.setNome(usuario.getNome());
+		toUpdate.setEmail(usuario.getEmail());
 		
-		Tipo updated = this.service.update(toUpdate);
+		Usuario updated = this.service.update(toUpdate);
 		return ResponseEntity.ok(mapper.toDTO(updated));
 	}
 
@@ -81,7 +81,5 @@ public class TipoResourceImpl implements TipoResource{
 		this.service.delete(id);
 		return ResponseEntity.ok().build();
 	}
-
-	
 	
 }
