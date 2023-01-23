@@ -37,7 +37,6 @@ public class TipoResourceImpl implements TipoResource{
 	@Override
 	public ResponseEntity<TipoDTO> findById(Long id) {
 		Tipo tipo = this.service.findById(id);
-	
 		TipoDTO dto = mapper.toDTO(tipo);
 		return ResponseEntity.ok(dto);
 	}
